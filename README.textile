@@ -46,6 +46,10 @@ development:
 
 For attachment_fu: @swf_file_post_name: "uploaded_data"@
 
+Move the @app/middleware@ to @#{RAILS_ROOT}/app/middleware@ and add the statement in environment.rb
+
+@config.load_paths += %W(#{RAILS_ROOT}/app/middleware)@
+
 h2. Usage
 
 Basically include this in the page you wish to use the editor in

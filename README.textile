@@ -46,9 +46,9 @@ development:
 
 For attachment_fu: @swf_file_post_name: "uploaded_data"@
 
-Move the @app/middleware@ to @#{RAILS_ROOT}/app/middleware@ and add the statement in environment.rb
+Add the following statement in environment.rb
 
-@config.load_paths += %W(#{RAILS_ROOT}/app/middleware)@
+@config.load_paths += %W(#{RAILS_ROOT}/vendor/plugins/rails-ckeditor/app/middleware)@
 
 h2. Usage
 

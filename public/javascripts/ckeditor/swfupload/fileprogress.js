@@ -221,7 +221,7 @@ FileProgress.prototype.createThumbnail = function(serverData) {
   var file_size = null;
   var file_name = null;
   var file_date = null;
-  var asset = (typeof object.picture != 'undefined') ? object.picture : object.attachment_file;
+  var asset = (typeof object.asset_picture != 'undefined') ? object.asset_picture : object.asset_file;
   
   if (typeof asset == 'undefined')
     return;
@@ -233,12 +233,12 @@ FileProgress.prototype.createThumbnail = function(serverData) {
   
   switch(asset.type.toLowerCase())
   {
-    case "picture":
-      image_src = object.picture.url_thumb;
-      image_alt = object.picture.url_content;
+    case "assetpicture":
+      image_src = object.asset_picture.url_thumb;
+      image_alt = object.asset_picture.url_content;
       
       break;
-    case "attachment_file" :
+    case "assetfile" :
       image_src = '/javascripts/ckeditor/images/ckfnothumb.gif';
     
       if (file_name.indexOf('.swf') != -1)
@@ -249,7 +249,22 @@ FileProgress.prototype.createThumbnail = function(serverData) {
       {
         image_src = '/javascripts/ckeditor/images/pdf.gif';
       }
-      
+      else if (file_name.indexOf('.xls') != -1)
+      {
+        image_src = '/javascripts/ckeditor/images/xls.gif';
+      }
+      else if (file_name.indexOf('.doc') != -1)
+      {
+        image_src = '/javascripts/ckeditor/images/doc.gif';
+      }
+      else if (file_name.indexOf('.mp3') != -1)
+      {
+        image_src = '/javascripts/ckeditor/images/mp3.gif';
+      }
+      else if (file_name.indexOf('.rar') != -1)
+      {
+        image_src = '/javascripts/ckeditor/images/rar.gif';
+      }
       break;
   }
   

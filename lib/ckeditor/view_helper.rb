@@ -29,12 +29,32 @@ module Ckeditor
     # <%= end_form_tag %>
     def ckeditor_textarea(object, field, options = {})
       options.symbolize_keys!
-      
+
+      # Add sub_field by Ark
+      sub_field_index = field.to_s.index('[')
+      sub_field = nil
+      if sub_field_index
+        sub_field = field[sub_field_index + 1, field.length - 1].to_i
+        method_field = field[0,sub_field_index]
+      end
+
       var = options.delete(:object) if options.key?(:object)
       var ||= @template.instance_variable_get("@#{object}")
+
+      if var
+        if sub_field_index
+          value = var.send(method_field.to_sym)[sub_field.to_s.to_sym] if var.send(method_field.to_sym)
+        else
+          value = var.send(field.to_sym)
+        end
+
+        value = value.nil? ? "" : value
+      else
+        value ||= options[:value] || ""
+      end
+
+      #value = var.send(field.to_sym) if var
       
-      value = var.send(field.to_sym) if var
-      value ||= options[:value] || ""
       
       id = ckeditor_element_id(object, field)
       
@@ -64,19 +84,35 @@ module Ckeditor
       ckeditor_options[:filebrowserImageUploadUrl] = PLUGIN_FILE_MANAGER_IMAGE_UPLOAD_URI
       
       output_buffer = ActionView::SafeBuffer.new
-      
-      if options[:ajax]
-        textarea_options.update(:name => id)
-        
-        output_buffer << tag(:input, { "type" => "hidden", "name" => "#{object}[#{field}]", "id" => "#{id}_hidden"})
-        output_buffer << ActionView::Base::InstanceTag.new(object, field, self, var).to_text_area_tag(textarea_options)
+
+      if sub_field_index
+        if options[:ajax]
+          textarea_options.update(:name => id)
+
+          output_buffer << tag(:input, { "type" => "hidden", "name" => "#{object}[#{method_field}][#{sub_field}]", "id" => "#{id}_hidden"})
+          output_buffer << ActionView::Base::InstanceTag.new(object, method_field, self, var).to_text_area_tag(textarea_options)
+        else
+          #textarea_options.update(:style => "width:#{width};height:#{height}")
+          #textarea_options.update(:name => "#{object}[#{method_field}[#{sub_field}]]")
+          #output_buffer << ActionView::Base::InstanceTag.new(object, "#{method_field}[#{sub_field}]", self, var).to_text_area_tag(textarea_options)
+          output_buffer << content_tag(:textarea, value, {"id" => "#{id}", "name" => "#{object}[#{method_field}[#{sub_field}]]",
+            :width => width, :height => height})
+        end
       else
-        textarea_options.update(:style => "width:#{width};height:#{height}")
-        
-        output_buffer << ActionView::Base::InstanceTag.new(object, field, self, var).to_text_area_tag(textarea_options)
+        if options[:ajax]
+          textarea_options.update(:name => id)
+
+          output_buffer << tag(:input, { "type" => "hidden", "name" => "#{object}[#{field}]", "id" => "#{id}_hidden"})
+          output_buffer << ActionView::Base::InstanceTag.new(object, field, self, var).to_text_area_tag(textarea_options)
+        else
+          textarea_options.update(:style => "width:#{width};height:#{height}")
+
+          output_buffer << ActionView::Base::InstanceTag.new(object, field, self, var).to_text_area_tag(textarea_options)
+        end
       end
       
-      output_buffer << javascript_tag("CKEDITOR.replace('#{object}[#{field}]', { 
+      output_buffer << javascript_tag("var _htmless_session='#{cookies[ActionController::Base.session_options[:key]]}';
+           var _htmless_token = '#{form_authenticity_token}'; \n CKEDITOR.replace('#{object}[#{field}]', {
           #{ckeditor_applay_options(ckeditor_options)}
         });\n")
         
@@ -121,9 +157,9 @@ module Ckeditor
       str = []
       options.each do |k, v|
         value = case v.class.to_s.downcase
-          when 'string' then "'#{v}'"
-          when 'hash' then "{ #{ckeditor_applay_options(v)} }"
-          else v
+        when 'string' then "'#{v}'"
+        when 'hash' then "{ #{ckeditor_applay_options(v)} }"
+        else v
         end
         str << "#{k}: #{value}"
       end

@@ -1,11 +1,12 @@
-class CkeditorController < ActionController::Base
+class CkeditorController < ApplicationController
   before_filter :swf_options, :only=>[:images, :files, :create]
+  session :cookie_only => false, :only => :create
   
   layout "ckeditor"
   
   # GET /ckeditor/images
   def images
-    @images = Picture.find(:all, :order=>"id DESC")
+    @images = @site.asset_pictures
     
     respond_to do |format|
       format.html {}
@@ -15,7 +16,7 @@ class CkeditorController < ActionController::Base
   
   # GET /ckeditor/files
   def files
-    @files = AttachmentFile.find(:all, :order=>"id DESC")
+    @files = @site.asset_files
     
     respond_to do |format|
       format.html {}
@@ -28,8 +29,8 @@ class CkeditorController < ActionController::Base
     @kind = params[:kind] || 'file'
     
     @record = case @kind.downcase
-      when 'file'  then AttachmentFile.new
-			when 'image' then Picture.new
+      when 'file'  then AssetFile.new
+			when 'image' then AssetPicture.new
 	  end
 	  
 	  unless params[:CKEditor].blank?	  
@@ -44,6 +45,8 @@ class CkeditorController < ActionController::Base
 	  end
     
     @record.attributes = options
+    @record.site = @site
+    @record.user = current_user
     
     if @record.valid? && @record.save
       @text = params[:CKEditor].blank? ? @record.to_json(:only=>[:id, :type], :methods=>[:url, :content_type, :size, :filename, :format_created_at]) : %Q"<script type='text/javascript'>

@@ -1,36 +1,67 @@
 class CkeditorController < ApplicationController
-  before_filter :swf_options, :only=>[:images, :files, :create]
+  before_filter :swf_options, :only=>[:_images, :_files, :create]
   session :cookie_only => false, :only => :create
   
   layout "ckeditor"
   
   # GET /ckeditor/images
   def images
-    @images = @site.asset_pictures
     
+    @tag = Tag.new
+    @tags = @site.tags.find_all_by_tag_type_id(TagType['AssetPicture'], :order => :position)
+
+    #@images = @images = Asset.find_tagged_with(@tag.name) || @site.asset_pictures
+    respond_to do |format|
+      format.html {}
+    end
+  end
+
+  def _images
+    @tag = Tag.find(params[:folder_id]) if params[:folder_id]
+    if @tag
+      @images = @images = Asset.find_tagged_with(@tag.name) || @site.asset_pictures
+    else
+      @images = @site.asset_pictures
+    end
+
     respond_to do |format|
       format.html {}
       format.xml { render :xml=>@images }
     end
+
   end
-  
   # GET /ckeditor/files
   def files
-    @files = @site.asset_files
+    @tag = Tag.new
+    @tags = @site.tags.find_all_by_tag_type_id(TagType['AssetFile'], :order => :position)
     
     respond_to do |format|
       format.html {}
       format.xml { render :xml=>@files }
     end
   end
-  
+
+  def _files
+    @tag = Tag.find(params[:folder_id]) if params[:folder_id]
+    if @tag
+      @files = @files = Asset.find_tagged_with(@tag.name) || @site.asset_files
+    else
+      @files = @site.asset_files
+    end
+
+    respond_to do |format|
+      format.html {}
+      format.xml { render :xml=>@files }
+    end
+  end
   # POST /ckeditor/create
   def create
     @kind = params[:kind] || 'file'
+    @tag = Tag.find(params[:folder_id]) if params[:folder_id]
     
     @record = case @kind.downcase
-      when 'file'  then AssetFile.new
-			when 'image' then AssetPicture.new
+    when 'file'  then AssetFile.new
+    when 'image' then AssetPicture.new
 	  end
 	  
 	  unless params[:CKEditor].blank?	  
@@ -47,8 +78,10 @@ class CkeditorController < ApplicationController
     @record.attributes = options
     @record.site = @site
     @record.user = current_user
+    @record.tag_list = @tag.name if @tag
     
-    if @record.valid? && @record.save
+    #if @record.valid? && @record.save
+    if @record.save!
       @text = params[:CKEditor].blank? ? @record.to_json(:only=>[:id, :type], :methods=>[:url, :content_type, :size, :filename, :format_created_at]) : %Q"<script type='text/javascript'>
         window.parent.CKEDITOR.tools.callFunction(#{params[:CKEditorFuncNum]}, '#{escape_single_quotes(@record.url(:content))}');
       </script>"
@@ -59,34 +92,44 @@ class CkeditorController < ApplicationController
     end
   end
 
+  def create_image_folder
+    @tag = Tag.find_or_create_with_like_by_name(params[:tag][:name], @site.id, @site.class.name, TagType['AssetPicture'].id)
+    redirect_to :back
+  end
+
+  def create_file_folder
+    @tag = Tag.find_or_create_with_like_by_name(params[:tag][:name], @site.id, @site.class.name, TagType['AssetFile'].id)
+    redirect_to :back
+  end
+
   private
     
-    def swf_options
-      if Ckeditor::Config.exists?
-        @swf_file_post_name = Ckeditor::Config['swf_file_post_name']
+  def swf_options
+    if Ckeditor::Config.exists?
+      @swf_file_post_name = Ckeditor::Config['swf_file_post_name']
         
-        if params[:action] == 'images'
-          @file_size_limit = Ckeditor::Config['swf_image_file_size_limit']
-				  @file_types = Ckeditor::Config['swf_image_file_types']
-				  @file_types_description = Ckeditor::Config['swf_image_file_types_description']
-				  @file_upload_limit = Ckeditor::Config['swf_image_file_upload_limit']
-			  else
-			    @file_size_limit = Ckeditor::Config['swf_file_size_limit']
-			    @file_types = Ckeditor::Config['swf_file_types']
-			    @file_types_description = Ckeditor::Config['swf_file_types_description']
-			    @file_upload_limit = Ckeditor::Config['swf_file_upload_limit']
-			  end
+      if params[:action] == '_images'
+        @file_size_limit = Ckeditor::Config['swf_image_file_size_limit']
+        @file_types = Ckeditor::Config['swf_image_file_types']
+        @file_types_description = Ckeditor::Config['swf_image_file_types_description']
+        @file_upload_limit = Ckeditor::Config['swf_image_file_upload_limit']
+      else
+        @file_size_limit = Ckeditor::Config['swf_file_size_limit']
+        @file_types = Ckeditor::Config['swf_file_types']
+        @file_types_description = Ckeditor::Config['swf_file_types_description']
+        @file_upload_limit = Ckeditor::Config['swf_file_upload_limit']
       end
+    end
       
-      @swf_file_post_name ||= 'data'
-      @file_size_limit ||= "5 MB"
-      @file_types ||= "*.jpg;*.jpeg;*.png;*.gif"
-      @file_types_description ||= "Images"
-      @file_upload_limit ||= 10
-    end
+    @swf_file_post_name ||= 'data'
+    @file_size_limit ||= "5 MB"
+    @file_types ||= "*.jpg;*.jpeg;*.png;*.gif"
+    @file_types_description ||= "Images"
+    @file_upload_limit ||= 10
+  end
     
-    def escape_single_quotes(str)
-      str.gsub('\\','\0\0').gsub('</','<\/').gsub(/\r\n|\n|\r/, "\\n").gsub(/["']/) { |m| "\\#{m}" }
-    end
+  def escape_single_quotes(str)
+    str.gsub('\\','\0\0').gsub('</','<\/').gsub(/\r\n|\n|\r/, "\\n").gsub(/["']/) { |m| "\\#{m}" }
+  end
   
 end

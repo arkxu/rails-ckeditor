@@ -1,0 +1,8 @@
+<div>
+  <div class="FCKFolder FCKFolderNoPlusMinus" style="padding-left:8px">
+    <img class="PlusMinus" align="absmiddle" src="/javascripts/ckeditor/images/icon_6_folder.gif" width="16" height="16" />
+    <span class="Label">
+      <%= link_to file_folder.name, "/ckeditor/_files?CKEditor=#{params[:CKEditor]}&CKEditorFuncNum=#{params[:CKEditorFuncNum]}&langCode=#{params[:langCode]}&folder_id=#{file_folder.id}", :target => "files_container" %>
+    </span>
+  </div>
+</div>

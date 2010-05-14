@@ -50,7 +50,7 @@
 
 <table width="100%" cellspacing="0" cellpadding="0">
   <tbody>
-    <tr><td>当前目录:<%= @tag? @tag.name : "全部" %></td></tr>
+    <tr><td class="PopupTitle">当前目录:<%= @tag? @tag.name : "全部" %></td></tr>
     <tr>
       <td class="TB_ToolbarSet" id="nv"></td>
     </tr>
@@ -90,7 +90,7 @@
     </tr>
 
     <tr>
-      <td style="height: 100%;" id="qu">
+      <td style="height: auto" id="qu">
         <div style="overflow:auto; height:100%;" id='container'>
           <%= render :partial=>"image", :collection=>@images %>
         </div>

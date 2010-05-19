@@ -77,11 +77,11 @@ module Ckeditor
       
       ckeditor_options[:swf_params] = options[:swf_params] unless options[:swf_params].nil?
       
-      ckeditor_options[:filebrowserBrowseUrl] = PLUGIN_FILE_MANAGER_URI
-      ckeditor_options[:filebrowserUploadUrl] = PLUGIN_FILE_MANAGER_UPLOAD_URI
+      ckeditor_options[:filebrowserBrowseUrl] = PLUGIN_FILE_MANAGER_URI + "?site_id=#{@site.id}"
+      ckeditor_options[:filebrowserUploadUrl] = PLUGIN_FILE_MANAGER_UPLOAD_URI# + "&site_id=#{@site.id}"
       
-      ckeditor_options[:filebrowserImageBrowseUrl] = PLUGIN_FILE_MANAGER_IMAGE_URI
-      ckeditor_options[:filebrowserImageUploadUrl] = PLUGIN_FILE_MANAGER_IMAGE_UPLOAD_URI
+      ckeditor_options[:filebrowserImageBrowseUrl] = PLUGIN_FILE_MANAGER_IMAGE_URI + "?site_id=#{@site.id}"
+      ckeditor_options[:filebrowserImageUploadUrl] = PLUGIN_FILE_MANAGER_IMAGE_UPLOAD_URI# + "&site_id=#{@site.id}"
       
       output_buffer = ActionView::SafeBuffer.new
 

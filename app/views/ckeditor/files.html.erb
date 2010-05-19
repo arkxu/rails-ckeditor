@@ -15,7 +15,7 @@
                   <div class="FCKFolder FCKFolderNoPlusMinus" style="padding-left:8px">
                     <img class="PlusMinus" align="absmiddle" src="/javascripts/ckeditor/images/icon_6_folder.gif" width="16" height="16" />
                     <span class="Label">
-                      <%= link_to "全部", "/ckeditor/_files?CKEditor=#{params[:CKEditor]}&CKEditorFuncNum=#{params[:CKEditorFuncNum]}&langCode=#{params[:langCode]}", :target => "files_container" %>
+                      <%= link_to "全部", "/ckeditor/_files?CKEditor=#{params[:CKEditor]}&CKEditorFuncNum=#{params[:CKEditorFuncNum]}&langCode=#{params[:langCode]}&site_id=#{@site.id}", :target => "files_container" %>
                     </span>
                   </div>
                 </div>
@@ -27,7 +27,7 @@
             </tr>
             <tr>
               <td>
-                <% form_for(@tag, :url => "/ckeditor/create_file_folder", :method => :put) do |f|%>
+                <% form_for(@tag, :url => "/ckeditor/create_file_folder?site_id=#{@site.id}", :method => :put) do |f|%>
                   <%= f.text_field :name, :size => "20" %>
                   <%= f.submit "创建目录" %>
                 <% end %>
@@ -39,7 +39,8 @@
       </td>
 
       <td id="iO" style="height: 550px;width:100%; vertical-align:top">
-        <iframe src="/ckeditor/_files?CKEditor=<%= params[:CKEditor] %>&CKEditorFuncNum=<%= params[:CKEditorFuncNum] %>&langCode=<%= params[:langCode] %>"
+        <iframe src="/ckeditor/_files?CKEditor=<%= params[:CKEditor] %>&CKEditorFuncNum=<%= params[:CKEditorFuncNum] %>
+                &langCode=<%= params[:langCode] %>&site_id=<%= @site.id %>"
                 name="files_container" style="height: 100%; width: 100%" frameborder="0"></iframe>
       </td>
     </tr>

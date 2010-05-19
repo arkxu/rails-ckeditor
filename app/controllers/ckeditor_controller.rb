@@ -19,7 +19,7 @@ class CkeditorController < ApplicationController
   def _images
     @tag = Tag.find(params[:folder_id]) if params[:folder_id]
     if @tag
-      @images = @images = Asset.find_tagged_with(@tag.name) || @site.asset_pictures
+      @images = @site.asset_pictures.find_tagged_with(@tag.name) || @site.asset_pictures
     else
       @images = @site.asset_pictures
     end
@@ -44,7 +44,7 @@ class CkeditorController < ApplicationController
   def _files
     @tag = Tag.find(params[:folder_id]) if params[:folder_id]
     if @tag
-      @files = @files = Asset.find_tagged_with(@tag.name) || @site.asset_files
+      @files = @site.asset_files.find_tagged_with(@tag.name) || @site.asset_files
     else
       @files = @site.asset_files
     end

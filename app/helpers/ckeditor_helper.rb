@@ -20,6 +20,7 @@ module CkeditorHelper
     options[session_key] = cookies[session_key]
     options[request_forgery_protection_token] = form_authenticity_token unless request_forgery_protection_token.nil?
     options[:folder_id] = params[:folder_id]
+    options[:site_id] = @site.id
     url_for(options)
   end
   

@@ -1,3 +1,7 @@
+function loadFailed() {
+	alert("Something went wrong while loading SWFUpload. If this were a real application we'd clean up and then give you an alternative");
+}
+
 function uploadStart(file) {
 	try {
 		/* I don't want to do any file validation or anything,  I'll just update the UI and
@@ -22,7 +26,7 @@ function fileQueued(file) {
 		progress.setProgress(0);
 		progress.toggleCancel(true, this);
 		
-		$('divFileProgressContainer').show();
+		$('#divFileProgressContainer').show();
 	} catch (ex) {
 		this.debug(ex);
 	}
@@ -118,7 +122,7 @@ function uploadComplete(file) {
 		} else {
 			var progress = new FileProgress(file,  this.customSettings.upload_target);
 			progress.setComplete();
-			progress.setStatus("All pictures are successfully processed.");
+			progress.setStatus("All files are successfully processed.");
 			progress.toggleCancel(false);
 		}
 	} catch (ex) {
@@ -164,8 +168,8 @@ function uploadError(file, errorCode, message) {
 
 // This event comes from the Queue Plugin
 function queueComplete(numFilesUploaded) {
-  var e = document.getElementById('divFileProgressContainer');
-  e.style.display = 'none';
+  var e = $('#divFileProgressContainer');
+  e.show();
 
 	//new Ajax.Request('/control/pictures/reload', {asynchronous:true, evalScripts:true, parameters:"assetable_type=" + assetable_type + "&assetable_id=" + assetable_id });
 	/*var status = document.getElementById("divStatus");

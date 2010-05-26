@@ -83,7 +83,7 @@ module Ckeditor
       ckeditor_options[:filebrowserImageBrowseUrl] = PLUGIN_FILE_MANAGER_IMAGE_URI + "?site_id=#{@site.id}"
       ckeditor_options[:filebrowserImageUploadUrl] = PLUGIN_FILE_MANAGER_IMAGE_UPLOAD_URI# + "&site_id=#{@site.id}"
       
-      output_buffer = ActionView::SafeBuffer.new
+      output_buffer = ActiveSupport::SafeBuffer.new
 
       if sub_field_index
         if options[:ajax]

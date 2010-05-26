@@ -1,4 +1,4 @@
-module ActionView #:nodoc:
+module ActiveSupport #:nodoc:
   class SafeBuffer < String
     def <<(value)
       super(value)

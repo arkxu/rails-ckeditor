@@ -7,48 +7,46 @@
     top.close();
   }
   
-  function uploadButton(button)
-  {
-    var element = $('fj');
-    
-    if (element.style.display == '')
-    {
-      element.style.display = 'none';
-    }
-    else
-    {
-      element.style.display = '';
-    }
-  }
-  
   window.onload = function()
   {
     init_swfupload();
-    var f = new FileThumb('qu');
-    var t = new ToolBar('nv');
-    
-    var b1 = new Button('Upload New File', 'Upload', 'add.gif');
-    var b2 = new Button('Refresh', 'Refresh', 'refresh.gif');
-    
-    b1.callback = uploadButton;
-    b2.callback = function(){ window.location.reload(); }
-    
-    t.buttons.push(b1);
-    t.buttons.push(b2);
-    
-    t.init();
+    make_file_thumb();
   }
+
+  $(function() {
+    $("#btn_refresh").button({
+      text: true,
+      icons: {
+        primary: 'ui-icon-arrowrefresh-1-s'
+      }
+    });
+    $("#btn_upload").button({
+      text: true,
+      icons: {
+        primary: 'ui-icon-circle-plus'
+      }
+    });
+    $("#btn_upload").click(function()
+    {
+      $('#fj').slideToggle('fast');
+    }
+  );
+    $("#btn_refresh").click(function() { window.location.reload(); });
+  });
 </script>
 
 <table width="100%" cellspacing="0" cellpadding="0">
   <tbody>
     <tr><td class="PopupTitle">当前目录:<%= @tag? @tag.name : "全部" %></td></tr>
     <tr>
-      <td class="TB_ToolbarSet" id="nv"></td>
+      <td class="TB_ToolbarSet" id="nv">
+        <button id="btn_upload">上传</button>
+        <button id="btn_refresh">刷新</button>
+      </td>
     </tr>
 
     <tr id="fj" style='display:none;'>
-      <td style="white-space: normal;" class="FCKUploadArea">
+      <td style="white-space: normal;" class="FCKUploadArea" width="910">
         <div class="PopupTitle">
           <span>Upload New Files</span>
         </div>
@@ -71,7 +69,7 @@
                 <tbody><tr>
                     <td width="100%"></td>
                     <td nowrap="nowrap">
-                      <button onclick="uploadButton()" class="Button"><span ckf:lang="CancelBtn">Cancel</span></button>
+                      <button onclick="$('#fj').slideToggle('fast');" class="Button"><span ckf:lang="CancelBtn">取消</span></button>
                     </td>
                   </tr>
                 </tbody></table>

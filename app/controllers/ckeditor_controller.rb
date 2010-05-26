@@ -12,7 +12,7 @@ class CkeditorController < ApplicationController
 
     #@images = @images = Asset.find_tagged_with(@tag.name) || @site.asset_pictures
     respond_to do |format|
-      format.html {}
+      format.html { render :layout => "folders"}
     end
   end
 
@@ -36,7 +36,7 @@ class CkeditorController < ApplicationController
     @tags = @site.tags.find_all_by_tag_type_id(TagType['AssetFile'], :order => :position)
     
     respond_to do |format|
-      format.html {}
+      format.html {render :layout => "folders"}
       format.xml { render :xml=>@files }
     end
   end

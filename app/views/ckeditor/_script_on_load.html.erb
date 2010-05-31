@@ -1,0 +1,92 @@
+<script type="text/javascript">
+$(function() {
+    init_swfupload();
+    make_file_thumb();
+    make_selectable();
+    $("#dialog_move_to").dialog({
+        autoOpen: false,
+        buttons: {
+            "确定": function() {
+                var ids = "";
+                $("div.FCKThumb.ui-selected").each(function(){
+                    ids = ids + $(this).attr("id") + ",";
+                });
+                if(ids == ""){
+                    window.alert("请先用鼠标选中文件!");
+                }else{
+                    $.ajax({
+                        url: "<%= move_attachment_path %>",
+                        data: $.param({
+                            'ids' : ids,
+                            'new_folder_id': $("#tag_id").val()
+                        }),
+                        complete: function(data){
+                            window.location.reload();
+                        },
+                        type: 'put',
+                        dataType: 'json'
+                    });
+                }
+            }
+        }
+    });
+
+    $("#btn_refresh").button({
+        text: true,
+        icons: {
+            primary: 'ui-icon-arrowrefresh-1-s'
+        }
+    });
+    $("#btn_upload").button({
+        text: true,
+        icons: {
+            primary: 'ui-icon-circle-plus'
+        }
+    });
+    $("#btn_move").button({
+        text: true,
+        icons: {
+            primary: 'ui-icon-transferthick-e-w'
+        }
+    });
+    $("#btn_remove").button({
+        text: true,
+        icons: {
+            primary: 'ui-icon-trash'
+        }
+    });
+
+    $("#btn_upload").click(function(){
+        $('#fj').slideToggle('fast');
+    });
+    $("#btn_refresh").click(function() {
+        window.location.reload();
+    });
+
+    $("#btn_move").click(function(){
+        $("#dialog_move_to").dialog('open');
+    });
+
+    $("#btn_remove").click(function(){
+        var ids = "";
+        $("div.FCKThumb.ui-selected").each(function(){
+            ids = ids + $(this).attr("id") + ",";
+        });
+        if(ids == ""){
+            window.alert("请先用鼠标选中文件!");
+        }else{
+            $.ajax({
+                url: "<%= delete_attachment_path %>",
+                data: $.param({
+                    'ids' : ids
+                }),
+                complete: function(data){
+                    window.location.reload();
+                },
+                type: 'put',
+                dataType: 'json'
+            });
+        }
+    });
+});
+</script>

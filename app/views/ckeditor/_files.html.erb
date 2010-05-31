@@ -7,33 +7,13 @@
     top.close();
   }
   
-  window.onload = function()
-  {
-    init_swfupload();
-    make_file_thumb();
-  }
-
-  $(function() {
-    $("#btn_refresh").button({
-      text: true,
-      icons: {
-        primary: 'ui-icon-arrowrefresh-1-s'
-      }
-    });
-    $("#btn_upload").button({
-      text: true,
-      icons: {
-        primary: 'ui-icon-circle-plus'
-      }
-    });
-    $("#btn_upload").click(function()
-    {
-      $('#fj').slideToggle('fast');
-    }
-  );
-    $("#btn_refresh").click(function() { window.location.reload(); });
-  });
 </script>
+
+<%= render "script_on_load" %>
+
+<div id="dialog_move_to" title="移动到...">
+  <%= collection_select :tag, :id, @tags.delete_if{|t| t == @tag}, :id, :name %>
+</div>
 
 <table width="100%" cellspacing="0" cellpadding="0">
   <tbody>
@@ -42,6 +22,8 @@
       <td class="TB_ToolbarSet" id="nv">
         <button id="btn_upload">上传</button>
         <button id="btn_refresh">刷新</button>
+        <button id="btn_move">移动</button>
+        <button id="btn_remove">删除</button>
       </td>
     </tr>
 

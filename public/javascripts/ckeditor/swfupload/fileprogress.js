@@ -16,6 +16,10 @@ function make_file_thumb(){
     });
 }
 
+function make_selectable(){
+    $('#container').selectable({ distance: 10 });
+}
+
 function FileProgress(file, targetID) {
     this.fileProgressID = "divFileProgress";
 
@@ -121,6 +125,7 @@ FileProgress.prototype.createThumbnail = function(serverData) {
     file_size = asset.size;
     file_name = asset.filename;
     file_date = asset.format_created_at;
+    asset_id  = asset.id;
   
     switch(asset.type.toLowerCase())
     {
@@ -161,6 +166,7 @@ FileProgress.prototype.createThumbnail = function(serverData) {
   
     var div = $(document.createElement('div'));
     div.addClass('FCKThumb');
+    div.attr('id', asset_id);
   
     var table = $(document.createElement('TABLE'));
     table.append($(document.createElement("TBODY")));

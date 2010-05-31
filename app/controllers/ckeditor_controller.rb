@@ -18,6 +18,7 @@ class CkeditorController < ApplicationController
 
   def _images
     @tag = Tag.find(params[:folder_id]) if params[:folder_id]
+    @tags = @site.tags.find_all_by_tag_type_id(TagType['AssetPicture'], :order => :position)
     if @tag
       @images = @site.asset_pictures.find_tagged_with(@tag.name) || @site.asset_pictures
     else
@@ -43,6 +44,7 @@ class CkeditorController < ApplicationController
 
   def _files
     @tag = Tag.find(params[:folder_id]) if params[:folder_id]
+    @tags = @site.tags.find_all_by_tag_type_id(TagType['AssetFile'], :order => :position)
     if @tag
       @files = @site.asset_files.find_tagged_with(@tag.name) || @site.asset_files
     else
@@ -93,14 +95,50 @@ class CkeditorController < ApplicationController
   end
 
   def create_image_folder
-    @tag = Tag.find_or_create_with_like_by_name(params[:tag][:name], @site.id, @site.class.name, TagType['AssetPicture'].id)
-    redirect_to :back
+    @origin_tag = Tag.find(:first, :conditions => ["data_source_id = ? and data_source_type =? and tag_type_id =? and name =?",
+        @site.id, @site.class.name, TagType['AssetPicture'], params[:tag][:name]])
+    if @origin_tag
+      render :text => ""
+    else
+      @tag = Tag.find_or_create_with_like_by_name(params[:tag][:name], @site.id, @site.class.name, TagType['AssetPicture'].id)
+
+      render :create_folder
+    end
   end
 
   def create_file_folder
-    @tag = Tag.find_or_create_with_like_by_name(params[:tag][:name], @site.id, @site.class.name, TagType['AssetFile'].id)
-    redirect_to :back
+    @origin_tag = Tag.find(:first, :conditions => ["data_source_id = ? and data_source_type =? and tag_type_id =? and name =?",
+        @site.id, @site.class.name, TagType['AssetFile'], params[:tag][:name]])
+    if @origin_tag
+      render :text => ""
+    else
+      @tag = Tag.find_or_create_with_like_by_name(params[:tag][:name], @site.id, @site.class.name, TagType['AssetFile'].id)
+    
+      render :create_folder
+    end
   end
+
+  def delete_asset
+    asset_ids = params[:ids].split(",")
+    asset_ids.each do |id|
+      Asset.find(id).destroy
+    end
+
+    render :text => "OK"
+  end
+
+  def move_asset
+    asset_ids = params[:ids].split(",")
+    new_folder_id = params[:new_folder_id]
+    asset_ids.each do |id|
+      asset = Asset.find(id)
+      asset.tag_list = Tag.find(new_folder_id).name
+      asset.save
+    end
+
+    render :text => "OK"
+  end
+
 
   private
     

@@ -18,12 +18,42 @@ module CkeditorHelper
     options[:controller] = controller
     options[:protocol] = "http://"
     options[session_key] = cookies[session_key]
+    #options[request_forgery_protection_token] = form_authenticity_token unless request_forgery_protection_token.nil?
+    options[:folder_id] = params[:folder_id]
+    options[:site_id] = @site.id
+    url_for(options)
+  end
+
+  def delete_attachment_path
+    session_key = ActionController::Base.session_options[:key]
+
+    options = {}
+    controller = '/ckeditor/delete_asset'
+
+    options[:controller] = controller
+    options[:protocol] = "http://"
+    options[session_key] = cookies[session_key]
     options[request_forgery_protection_token] = form_authenticity_token unless request_forgery_protection_token.nil?
     options[:folder_id] = params[:folder_id]
     options[:site_id] = @site.id
     url_for(options)
   end
-  
+
+  def move_attachment_path
+    session_key = ActionController::Base.session_options[:key]
+
+    options = {}
+    controller = '/ckeditor/move_asset'
+
+    options[:controller] = controller
+    options[:protocol] = "http://"
+    options[session_key] = cookies[session_key]
+    options[request_forgery_protection_token] = form_authenticity_token unless request_forgery_protection_token.nil?
+    options[:folder_id] = params[:folder_id]
+    options[:site_id] = @site.id
+    url_for(options)
+  end
+
   def file_image_tag(filename, path)
     extname = File.extname(filename)
     

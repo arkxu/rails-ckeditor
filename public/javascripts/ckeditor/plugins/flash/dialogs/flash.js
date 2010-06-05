@@ -171,7 +171,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
     };
 
     CKEDITOR.dialog.add('flash',function(i){
-        var j=!i.config.flashEmbedTagOnly,k=i.config.flashAddEmbedTag||i.config.flashEmbedTagOnly,l,m='<div>'+CKEDITOR.tools.htmlEncode(i.lang.common.preview)+'<br>'+'<div id="FlashPreviewLoader" style="display:none"><div class="loading">&nbsp;</div></div>'+'<div id="FlashPreviewBox"></div></div>';
+        var j=!i.config.flashEmbedTagOnly,k=i.config.flashAddEmbedTag||i.config.flashEmbedTagOnly,l,m='<div>'+CKEDITOR.tools.htmlEncode(i.lang.common.preview)+'<br>'+'<div id="FlashPreviewLoader'+CKEDITOR.tools.getNextNumber()+'" style="display:none"><div class="loading">&nbsp;</div></div>'+'<div id="FlashPreviewBox'+CKEDITOR.tools.getNextNumber()+'" class="FlashPreviewBox"></div></div>';
         return{
             title:i.lang.flash.title,
             minWidth:420,

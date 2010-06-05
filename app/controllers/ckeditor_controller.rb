@@ -127,6 +127,21 @@ class CkeditorController < ApplicationController
     render :text => "OK"
   end
 
+  def delete_folder
+    folder = Tag.find(params[:folder_id])
+    folder.destroy
+
+    render :text => "OK"
+  end
+
+  def rename_folder
+    folder = Tag.find(params[:folder_id])
+    folder.name = params[:new_folder_name]
+    folder.save
+    folder.reload
+    render :text => folder.name
+  end
+  
   def move_asset
     asset_ids = params[:ids].split(",")
     new_folder_id = params[:new_folder_id]

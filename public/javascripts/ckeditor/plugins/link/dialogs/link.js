@@ -226,8 +226,7 @@ CKEDITOR.dialog.add('link',function(a){
                         type:'select',
                         label:a.lang.common.protocol,
                         'default':'http://',
-                        style:'width : 100%;',
-                        items:[['http://'],['https://'],['ftp://'],['news://'],[a.lang.link.other,'']],
+                        items:[['http://‎','http://'],['https://‎','https://'],['ftp://‎','ftp://'],['news://‎','news://'],[a.lang.link.other,'']],
                         setup:function(C){
                             if(C.url)this.setValue(C.url.protocol||'');
                         },

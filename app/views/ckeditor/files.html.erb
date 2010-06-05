@@ -28,7 +28,7 @@
             <tr>
               <td>
                 <% remote_form_for(@tag, :url => "/ckeditor/create_file_folder?CKEditor=#{params[:CKEditor]}&CKEditorFuncNum=#{params[:CKEditorFuncNum]}&langCode=#{params[:langCode]}&site_id=#{@site.id}",
-                  :method => :put, :update => "hf", :position => 'bottom') do |f|%>
+                  :method => :put, :update => "hf", :complete => "init_context_menu();", :position => 'bottom') do |f|%>
                   <%= f.text_field :name, :size => "20" %>
                   <%= f.submit "创建目录" %>
                 <% end %>

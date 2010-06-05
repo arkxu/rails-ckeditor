@@ -87,7 +87,7 @@
                 var file=parseUrl(url);
                 var title=data.title||'';
                 attributes.title=(data.title.length==0)?file.filename:data.title;
-                attributes.class=file.className;
+                //attributes.class=file.className;
                 if(data.target){
                     if(data.target.type!='notSet'&&data.target.name)attributes.target=data.target.name;else removeAttributes.push('target');
                     removeAttributes.push('_cke_pa_onclick','onclick')

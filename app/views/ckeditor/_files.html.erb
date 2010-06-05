@@ -11,7 +11,7 @@
 
 <%= render "script_on_load" %>
 
-<div id="dialog_move_to" title="移动到...">
+<div id="dialog_move_to" title="移动到..." style="display: none;">
   <%= collection_select :tag, :id, @tags.delete_if{|t| t == @tag}, :id, :name %>
 </div>
 

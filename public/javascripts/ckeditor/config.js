@@ -56,4 +56,6 @@ CKEDITOR.editorConfig = function( config )
   config.font_names = config.font_names + ";黑体;宋体;华文楷体;";
 
   config.toolbarStartupExpanded = false;
+
+  config.scayt_autoStartup = false;
 };

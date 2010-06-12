@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="robots" content="noindex, nofollow"/>
     <link href="/javascripts/ckeditor/css/fck_dialog.css" type="text/css" rel="stylesheet"/>
-    <link href="/stylesheets/redmond/jquery-ui-1.8.1.custom.css" type="text/css" rel="stylesheet"/>
+    <link href="/stylesheets/redmond/jquery-ui-custom.css" type="text/css" rel="stylesheet"/>
     <link href="/stylesheets/jquery.contextMenu.css" type="text/css" rel="stylesheet"/>
 
     <script src="/javascripts/jquery.js" type="text/javascript"></script>
@@ -21,7 +21,7 @@
         }, function(action, el, pos) {
           if(action == "delete"){
             $("#dialog_delete-confirm").dialog({
-              resizable: false,
+              resizable: true,
               height:150,
               modal: true,
               buttons: {
@@ -47,7 +47,7 @@
             
           }else if(action == "edit"){
             $("#dialog_rename_folder").dialog({
-              resizable: false,
+              resizable: true,
               height:150,
               modal: true,
               buttons: {
@@ -78,7 +78,7 @@
   </head>
   <body style="margin: 0px; padding: 0px;">
     <%= yield %>
-    <div id="dialog_delete-confirm" title="确认要删除文件?" style="display:none;">
+    <div id="dialog_delete-confirm" title="确认要删除文件夹?" style="display:none;">
       确定删除此文件夹?
     </div>
     <div id="dialog_rename_folder" title="重命名" style="display: none;">

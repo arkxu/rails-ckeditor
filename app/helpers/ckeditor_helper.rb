@@ -28,6 +28,10 @@ module CkeditorHelper
     assemble_path '/ckeditor/delete_asset'
   end
 
+  def update_attachment_path
+    assemble_path '/ckeditor/update'
+  end
+
   def move_attachment_path
     assemble_path '/ckeditor/move_asset'
   end

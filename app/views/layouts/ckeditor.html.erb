@@ -7,7 +7,8 @@
     <link href="/javascripts/ckeditor/css/fck_dialog.css" type="text/css" rel="stylesheet"/>
     <link href="/javascripts/ckeditor/css/ckfinder.css" type="text/css" rel="stylesheet"/>
     <link href="/javascripts/ckeditor/css/swfupload.css" type="text/css" rel="stylesheet"/>
-    <link href="/stylesheets/redmond/jquery-ui-1.8.1.custom.css" type="text/css" rel="stylesheet"/>
+    <link href="/stylesheets/redmond/jquery-ui-custom.css" type="text/css" rel="stylesheet"/>
+    <link href="/stylesheets/jquery.contextMenu.css" type="text/css" rel="stylesheet"/>
 
     <script src="/javascripts/jquery.js" type="text/javascript"></script>
     <script src="/javascripts/jquery-ui.js" type="text/javascript"></script>
@@ -16,6 +17,8 @@
     <script src="/javascripts/ckeditor/swfupload/fileprogress.js" type="text/javascript"></script>
     <script src="/javascripts/ckeditor/swfupload/handlers.js" type="text/javascript"></script>
     <script src="/javascripts/ckeditor/swfupload/querystring.js" type="text/javascript"></script>
+    <script src="/javascripts/jquery.contextMenu.js" type="text/javascript"></script>
+    <script src="/javascripts/jquery.upload-1.0.2.min.js" type="text/javascript"></script>
 
     <script type="text/javascript">
       var params = new Querystring();
@@ -24,8 +27,82 @@
       var CKEDITOR = top.opener.CKEDITOR;
       var editor = CKEDITOR.instances[CKEditorName];
     </script>
+
+    <script type="text/javascript">
+      $(document).ready( function() {
+        init_file_context_menu();
+
+      });
+
+      function init_file_context_menu(){
+        $("#qu div .FCKThumb").contextMenu({
+          menu: 'fcMenu'
+        }, function(action, el, pos) {
+          if(action == "delete"){
+            $("#dialog_delete-confirm").dialog({
+              resizable: true,
+              height:150,
+              modal: true,
+              buttons: {
+                '取消': function() {
+                  $(this).dialog('close');
+                },
+                '删除': function() {
+                  $.ajax({
+                    url: "<%= delete_attachment_path %>",
+                    data: $.param({
+                      'ids': $(el).attr('id')
+                    }),
+                    complete: function(data){
+                      $(el).remove();
+                      $("#dialog_delete-confirm").dialog('close');
+                    },
+                    type: 'put',
+                    dataType: 'json'
+                  });
+                }
+              }
+            });
+          }else if(action == 'edit'){
+            $("#dialog_edit_file").dialog({
+              resizable: true,
+              height:150,
+              modal: true,
+              buttons: {
+                '取消': function() {
+                  $(this).dialog('close');
+                },
+                '确定': function() {
+                  $('#fields').upload("<%= update_attachment_path %>", {'id':$(el).attr('id')},function(res) {
+                    window.location.reload();
+                  }, 'html');
+
+                }
+              }
+            });
+          }
+        });
+      }
+    </script>
   </head>
   <body style="margin: 0px; padding: 0px;">
     <%= yield %>
+
+    <div id="dialog_delete-confirm" title="确认要删除文件?" style="display:none;">
+      确定删除此文件?
+    </div>
+
+    <div id="dialog_edit_file" title="修改文件" style="display:none">
+      <% form_tag('#', :multipart => true) do%>
+        <div id="fields">
+          <%= file_field_tag "data" %>
+        </div>
+      <% end %>
+    </div>
+
+    <ul id="fcMenu" class="contextMenu">
+      <li class="edit"><a href="#edit">修改</a></li>
+      <li class="delete"><a href="#delete">删除</a></li>
+    </ul>
   </body>
 </html>

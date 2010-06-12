@@ -94,6 +94,16 @@ class CkeditorController < ApplicationController
     end
   end
 
+  def update
+    @record = Asset.find(params[:id])
+    
+    @record.data = params[:data]
+
+    @record.save!
+    
+    render :text => "OK"
+  end
+
   def create_image_folder
     @origin_tag = Tag.find(:first, :conditions => ["data_source_id = ? and data_source_type =? and tag_type_id =? and name =?",
         @site.id, @site.class.name, TagType['AssetPicture'], params[:tag][:name]])

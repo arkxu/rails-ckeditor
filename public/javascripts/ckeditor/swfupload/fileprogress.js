@@ -210,4 +210,6 @@ FileProgress.prototype.createThumbnail = function(serverData) {
         setUrl(image.attr('alt'));
     });
     div.prependTo(container);
+
+    init_file_context_menu();
 };

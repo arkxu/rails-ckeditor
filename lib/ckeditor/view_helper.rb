@@ -69,7 +69,7 @@ module Ckeditor
       
       ckeditor_options = {}
       
-      ckeditor_options[:language] = options[:language] || I18n.locale.to_s
+      #ckeditor_options[:language] = options[:language] || I18n.locale.to_s
       ckeditor_options[:toolbar]  = options[:toolbar] unless options[:toolbar].nil?
       ckeditor_options[:skin]     = options[:skin]    unless options[:skin].nil?
       ckeditor_options[:width]    = options[:width]   unless options[:width].nil?

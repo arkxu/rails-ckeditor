@@ -96,10 +96,10 @@ class CkeditorController < ApplicationController
 
   def update
     @record = Asset.find(params[:id])
-    
+
     @record.data = params[:data]
 
-    @record.save!
+    @record.save
     
     render :text => "OK"
   end

@@ -1,3 +1,6 @@
+h2. Notice, this plugin is modified based on my own requirement, it add several more functions such as folders, context menu, ETC.
+Please make sure you know what you are doing if you want to use it. Good luck!
+
 h1. Rails CKEditor integration plugin with SWFUpload support
 
 CKEditor is a text editor to be used inside web pages. It's a WYSIWYG editor, which means that the text being edited on it looks as similar as possible to 
